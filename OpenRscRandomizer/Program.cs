@@ -59,9 +59,7 @@ namespace OpenRscRandomizer
 
             foreach (int rando in groupedAttackableRandoms)
             {
-
-                foreach (NpcLoc npc in npcs.npclocs.Where(x => !exclusionIds.Contains(x.id) &&
-                    !processed.Contains(x.id)).ToList())
+                foreach (NpcLoc npc in npcs.npclocs.Where(x => !exclusionIds.Contains(x.id)))
                 {
                     countRan += 1;
                     Console.WriteLine($"processed {countRan}");
@@ -72,7 +70,6 @@ namespace OpenRscRandomizer
                     var matchingItems = npcs.npclocs.Where(x => x.id.Equals(thisId)).Select(x => { x.id = rando; return x; })
                         .ToList();
                     newList.AddRange(matchingItems);
-                    processed.Add(thisId);
 
                     // Remove those items from the list
                     foreach (var matchingItem in matchingItems)
@@ -84,10 +81,8 @@ namespace OpenRscRandomizer
                 }
             }
 
-            // DEDUPE by start.
-            var deduped = newList.GroupBy(x => x.start).Select(x => x.First()).ToList();
-            deduped.AddRange(exclusionLocs);
-            npcs.npclocs = deduped;
+            newList.AddRange(exclusionLocs);
+            npcs.npclocs = newList;
 
             // Write npcs to a new JSON file as a seed
             var newNpcLocsJson = JsonConvert.SerializeObject(npcs);
@@ -121,6 +116,10 @@ namespace OpenRscRandomizer
 
         private static IList<Npc> GetExcludedNpcs(string npcDefsFilePath)
         {
+            IList<int> attackableQuestNpcs = new List<int>() { 35, 50, 29, 109, 177, 178, 179, 180, 181, 182, 192, 196, 216, 
+                244, 245, 246, 247, 252, 254, 259, 276, 315, 361, 364, 383, 384, 386, 388, 410, 426, 428, 473, 502, 531, 568, 
+                613, 614, 615, 632, 633, 641, 644, 645, 646, 647, 651, 658, 663, 664, 669, 670, 673, 684, 692, 697, 713, 729, 
+                757, 758, 759, 760, 761, 762, 766, 767, 769, 772, 789, 790, 791 };
             NpcDefs npcs;
 
             using (StreamReader reader = File.OpenText(npcDefsFilePath))
@@ -129,7 +128,7 @@ namespace OpenRscRandomizer
                 npcs = JsonConvert.DeserializeObject<NpcDefs>(json);
             }
 
-            return npcs.npcs.Where(x => x.attackable == false).Select(x => x).ToList();
+            return npcs.npcs.Where(x => x.attackable == false && !attackableQuestNpcs.Contains(x.id)).Select(x => x).ToList();
         }
 
         private static List<NpcLoc> GetExcludedNpcLocs(IList<NpcLoc> originalNpcs, IList<int> excludedNpcInts)
@@ -138,28 +137,15 @@ namespace OpenRscRandomizer
 
             foreach (var excludedId in excludedNpcInts)
             {
-                // Get ALL objects from originalNpcs that match this excludedId
-                var allThoseObjects = originalNpcs.Where(x => x.id.Equals(excludedId)).Select(x => x).ToList();
+                var matchingNpcLocs = originalNpcs.Where(x => x.id.Equals(excludedId)).Select(x => x).ToList();
 
-                excludedNpcLocs.AddRange(allThoseObjects);
-
-                //excludedNpcLocs.Add(originalNpcs.Select(x => x.id.Equals(excludedId)).ToList());
+                excludedNpcLocs.AddRange(matchingNpcLocs);
             }
 
             return excludedNpcLocs;
         }
     }
 }
-
-
-// We NEED to remove the objects from the iteration when they are added to newList.
-// Example - rando is 243, grey wolf. We know `npc` below is going to be 401, Black Knight Titan.
-// So we set BKT's id to 243, which puts a grey wolf where BKT was, and add BKT's id to the processed list
-// So far, so good, and this all makes sense.
-
-// Break out, and next rando is 8 - Bear. 
-// `npc` below is now 243, which is the grey wolf which used to be a BKT.
-// We have to remove that guy so we don't update the same NPC location over and over and over.
 
 // TODO: Save this code and use it as one type of randomizer ("randomize NPCs singularly" or something)
 //// Change NPC IDs to the equivalent randomized ID.
