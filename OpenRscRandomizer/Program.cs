@@ -34,7 +34,9 @@ namespace OpenRscRandomizer
 
         private static void GenerateRandomizedNpcLocs(string npcLocsFilePath, DirectoryInfo newSeedDir, string npcDefsFilePath)
         {
-            IList<int> exclusions = GetExclusions(npcDefsFilePath);
+            IList<Npc> exclusions = GetExcludedNpcs(npcDefsFilePath);
+            IList<int> exclusionIds = exclusions.Select(x => x.id).ToList();
+            
             NpcLocs npcs;
 
             using (StreamReader reader = File.OpenText(npcLocsFilePath))
@@ -43,20 +45,49 @@ namespace OpenRscRandomizer
                 npcs = JsonConvert.DeserializeObject<NpcLocs>(json);
             }
 
+            IList<NpcLoc> exclusionLocs = GetExcludedNpcLocs(npcs.npclocs, exclusionIds);
+
             IList<int> justTheIds = npcs.npclocs.Select(x => x.id).ToList();
 
             var rnd = new Random();
             IList<int> randomized = justTheIds.OrderBy(id => rnd.Next()).ToList();
+            IList<int> groupedAttackableRandoms = randomized.Where(x => !exclusionIds.Contains(x)).Distinct().ToList();
+            List<NpcLoc> newList = new List<NpcLoc>();
 
-            // Change NPC IDs to the equivalent randomized ID.
-            for (int i = 0; i < npcs.npclocs.Count(); i++)
+            int countRan = 0;
+            List<int> processed = new List<int>();
+
+            foreach (int rando in groupedAttackableRandoms)
             {
-                // Do not randomize any NPCs in the exclusions list.
-                if (!exclusions.Contains(npcs.npclocs[i].id) && !exclusions.Contains(randomized[i]))
+
+                foreach (NpcLoc npc in npcs.npclocs.Where(x => !exclusionIds.Contains(x.id) &&
+                    !processed.Contains(x.id)).ToList())
                 {
-                    npcs.npclocs[i].id = randomized[i];
+                    countRan += 1;
+                    Console.WriteLine($"processed {countRan}");
+                    var thisId = npc.id;
+
+                    // Get all NPCs with THIS ID ^^^
+                    // Set THEIR ids to `rando`.
+                    var matchingItems = npcs.npclocs.Where(x => x.id.Equals(thisId)).Select(x => { x.id = rando; return x; })
+                        .ToList();
+                    newList.AddRange(matchingItems);
+                    processed.Add(thisId);
+
+                    // Remove those items from the list
+                    foreach (var matchingItem in matchingItems)
+                    {
+                        npcs.npclocs.Remove(matchingItem);
+                    }
+
+                    break;
                 }
             }
+
+            // DEDUPE by start.
+            var deduped = newList.GroupBy(x => x.start).Select(x => x.First()).ToList();
+            deduped.AddRange(exclusionLocs);
+            npcs.npclocs = deduped;
 
             // Write npcs to a new JSON file as a seed
             var newNpcLocsJson = JsonConvert.SerializeObject(npcs);
@@ -88,9 +119,8 @@ namespace OpenRscRandomizer
             File.WriteAllText($"{newSeedDir.FullName}\\GroundItems.json", newGroundItemsJson);
         }
 
-        private static IList<int> GetExclusions(string npcDefsFilePath)
+        private static IList<Npc> GetExcludedNpcs(string npcDefsFilePath)
         {
-            IList<int> exclusions = new List<int>() { 95, 224, 268, 540, 617 };
             NpcDefs npcs;
 
             using (StreamReader reader = File.OpenText(npcDefsFilePath))
@@ -99,7 +129,47 @@ namespace OpenRscRandomizer
                 npcs = JsonConvert.DeserializeObject<NpcDefs>(json);
             }
 
-            return npcs.npcs.Where(x => x.attackable == false).Select(x => x.id).ToList();
+            return npcs.npcs.Where(x => x.attackable == false).Select(x => x).ToList();
+        }
+
+        private static List<NpcLoc> GetExcludedNpcLocs(IList<NpcLoc> originalNpcs, IList<int> excludedNpcInts)
+        {
+            List<NpcLoc> excludedNpcLocs = new List<NpcLoc>();
+
+            foreach (var excludedId in excludedNpcInts)
+            {
+                // Get ALL objects from originalNpcs that match this excludedId
+                var allThoseObjects = originalNpcs.Where(x => x.id.Equals(excludedId)).Select(x => x).ToList();
+
+                excludedNpcLocs.AddRange(allThoseObjects);
+
+                //excludedNpcLocs.Add(originalNpcs.Select(x => x.id.Equals(excludedId)).ToList());
+            }
+
+            return excludedNpcLocs;
         }
     }
 }
+
+
+// We NEED to remove the objects from the iteration when they are added to newList.
+// Example - rando is 243, grey wolf. We know `npc` below is going to be 401, Black Knight Titan.
+// So we set BKT's id to 243, which puts a grey wolf where BKT was, and add BKT's id to the processed list
+// So far, so good, and this all makes sense.
+
+// Break out, and next rando is 8 - Bear. 
+// `npc` below is now 243, which is the grey wolf which used to be a BKT.
+// We have to remove that guy so we don't update the same NPC location over and over and over.
+
+// TODO: Save this code and use it as one type of randomizer ("randomize NPCs singularly" or something)
+//// Change NPC IDs to the equivalent randomized ID.
+//for (int i = 0; i < npcs.npclocs.Count(); i++)
+//{
+//    // set all ids like this one to a grouped randomized id
+
+//    // Do not randomize any NPCs in the exclusions list.
+//    if (!exclusions.Contains(npcs.npclocs[i].id) && !exclusions.Contains(randomized[i]))
+//    {
+//        npcs.npclocs[i].id = randomized[i];
+//    }
+//}
