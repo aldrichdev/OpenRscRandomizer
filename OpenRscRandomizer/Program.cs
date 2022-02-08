@@ -32,20 +32,6 @@ namespace OpenRscRandomizer
 
             var newSeedDir = CreateSeed(projectPath);
 
-            // TODO: Going to create a universal windows app instead of this. So we can have checkboxes
-            //Console.WriteLine("Would you like to randomize NPCs? (y/n):");
-            //var inputWantsRandomizedNpcs = Console.ReadLine();
-            //if (inputWantsRandomizedNpcs.ToLower().Equals("y"))
-            //{
-            //    wantsRandomizedNpcs = true;
-            //}
-
-            //Console.WriteLine("Would you like non-attackable NPCs to be excluded from the randomization? " +
-            //    "i.e. Bankers, Quest NPCs, Shopkeepers, etc.");
-            //var inputWants
-
-            //Console.WriteLine("Would you like the NPCs to be randomized singularly (i.e. every NPC")
-
             GenerateRandomizedNpcLocs(npcLocsFilePath, newSeedDir, npcDefsFilePath);
             GenerateRandomizedGroundItems(groundItemsFilePath, newSeedDir);
 
