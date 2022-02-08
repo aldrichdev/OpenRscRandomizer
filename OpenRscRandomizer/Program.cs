@@ -16,7 +16,35 @@ namespace OpenRscRandomizer
             var npcLocsFilePath = $"{projectPath}\\Input\\NpcLocs.json";
             var groundItemsFilePath = $"{projectPath}\\Input\\GroundItems.json";
 
+            bool wantsRandomizedNpcs;
+            bool wantsNonAttackableNpcsExcluded;
+            bool wantsAttackableQuestNpcsExcluded;
+            bool wantsSingularlyRandomizedNpcs;
+            bool wantsGrouplyRandomizedNpcs;
+            bool wantsRandomizedItems;
+            bool wantsRandomizedScenery;
+            bool wantsSingularlyRandomizedScenery;
+            bool wantsGrouplyRandomizedScenery;
+            bool wantsTypeBasedRandomizedScenery;
+
+            Console.WriteLine("Welcome to the Open RSC Randomizer! Press ENTER to create a new seed.");
+            Console.ReadLine();
+
             var newSeedDir = CreateSeed(projectPath);
+
+            // TODO: Going to create a universal windows app instead of this. So we can have checkboxes
+            //Console.WriteLine("Would you like to randomize NPCs? (y/n):");
+            //var inputWantsRandomizedNpcs = Console.ReadLine();
+            //if (inputWantsRandomizedNpcs.ToLower().Equals("y"))
+            //{
+            //    wantsRandomizedNpcs = true;
+            //}
+
+            //Console.WriteLine("Would you like non-attackable NPCs to be excluded from the randomization? " +
+            //    "i.e. Bankers, Quest NPCs, Shopkeepers, etc.");
+            //var inputWants
+
+            //Console.WriteLine("Would you like the NPCs to be randomized singularly (i.e. every NPC")
 
             GenerateRandomizedNpcLocs(npcLocsFilePath, newSeedDir, npcDefsFilePath);
             GenerateRandomizedGroundItems(groundItemsFilePath, newSeedDir);
@@ -128,7 +156,7 @@ namespace OpenRscRandomizer
                 npcs = JsonConvert.DeserializeObject<NpcDefs>(json);
             }
 
-            return npcs.npcs.Where(x => x.attackable == false && !attackableQuestNpcs.Contains(x.id)).Select(x => x).ToList();
+            return npcs.npcs.Where(x => x.attackable == false || attackableQuestNpcs.Contains(x.id)).Select(x => x).ToList();
         }
 
         private static List<NpcLoc> GetExcludedNpcLocs(IList<NpcLoc> originalNpcs, IList<int> excludedNpcInts)
@@ -144,18 +172,21 @@ namespace OpenRscRandomizer
 
             return excludedNpcLocs;
         }
+
+        private static NpcLocs GetSingularlyRandomizedNpcs(NpcLocs npcs, IList<int> randomized, IList<int> exclusions)
+        {
+            NpcLocs newNpcs = npcs;
+
+            for (int i = 0; i < newNpcs.npclocs.Count(); i++)
+            {
+                // Do not randomize any NPCs in the exclusions list.
+                if (!exclusions.Contains(newNpcs.npclocs[i].id) && !exclusions.Contains(randomized[i]))
+                {
+                    newNpcs.npclocs[i].id = randomized[i];
+                }
+            }
+
+            return newNpcs;
+        }
     }
 }
-
-// TODO: Save this code and use it as one type of randomizer ("randomize NPCs singularly" or something)
-//// Change NPC IDs to the equivalent randomized ID.
-//for (int i = 0; i < npcs.npclocs.Count(); i++)
-//{
-//    // set all ids like this one to a grouped randomized id
-
-//    // Do not randomize any NPCs in the exclusions list.
-//    if (!exclusions.Contains(npcs.npclocs[i].id) && !exclusions.Contains(randomized[i]))
-//    {
-//        npcs.npclocs[i].id = randomized[i];
-//    }
-//}
