@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace OpenRscRandomizer.Models
+namespace OpenRscRandomizer.Library.Models
 {
     public class Coordinate
     {
