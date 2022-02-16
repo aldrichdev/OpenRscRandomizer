@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using OpenRscRandomizer.Library.Enums;
 using OpenRscRandomizer.Library.Models;
 
 namespace OpenRscRandomizer.Library
@@ -22,10 +23,11 @@ namespace OpenRscRandomizer.Library
             return Directory.CreateDirectory($"{PROJECT_PATH}\\Output\\Seed {seed}");
         }
 
-        public void GenerateRandomizedNpcLocs(DirectoryInfo newSeedDir)
+        public void GenerateRandomizedNpcLocs(DirectoryInfo newSeedDir, NpcRandomizerMode npcRandomizerMode, 
+            bool excludeNonAttackables, bool excludeAttackableQuestNpcs)
         {
             // Randomize npcs.
-            NpcLocs npcs = GetRandomizedNpcLocations();
+            NpcLocs npcs = GetRandomizedNpcLocations(npcRandomizerMode, excludeNonAttackables, excludeAttackableQuestNpcs);
 
             // Write npcs to a new JSON file as a seed
             var newNpcLocsJson = JsonConvert.SerializeObject(npcs);
@@ -57,9 +59,10 @@ namespace OpenRscRandomizer.Library
             File.WriteAllText($"{newSeedDir.FullName}\\GroundItems.json", newGroundItemsJson);
         }
 
-        public NpcLocs GetRandomizedNpcLocations()
+        public NpcLocs GetRandomizedNpcLocations(NpcRandomizerMode npcRandomizerMode, bool excludeNonAttackables, 
+            bool excludeAttackableQuestNpcs)
         {
-            IList<Npc> exclusions = GetExcludedNpcs(NPC_DEFS_FILE_PATH);
+            IList<Npc> exclusions = GetExcludedNpcs(NPC_DEFS_FILE_PATH, excludeNonAttackables, excludeAttackableQuestNpcs);
             IList<int> exclusionIds = exclusions.Select(x => x.id).ToList();
 
             NpcLocs npcs = GetNpcLocations();
@@ -70,6 +73,84 @@ namespace OpenRscRandomizer.Library
 
             var rnd = new Random();
             IList<int> randomized = justTheIds.OrderBy(id => rnd.Next()).ToList();
+
+            switch (npcRandomizerMode)
+            {
+                case NpcRandomizerMode.Singularly:
+                    return GetSingularlyRandomizedNpcs(npcs, randomized, exclusionIds);
+                case NpcRandomizerMode.Grouply:
+                    return GetGrouplyRandomizedNpcs(npcs, randomized, exclusionIds, exclusionLocs);
+                default:
+                    return GetSingularlyRandomizedNpcs(npcs, randomized, exclusionIds);
+            }
+        }
+
+        private IList<Npc> GetExcludedNpcs(string npcDefsFilePath, bool excludeNonAttackables, bool excludeAttackableQuestNpcs)
+        {
+            IList<int> attackableQuestNpcs = new List<int>() { 35, 50, 29, 109, 177, 178, 179, 180, 181, 182, 192, 196, 216,
+                244, 245, 246, 247, 252, 254, 259, 276, 315, 361, 364, 383, 384, 386, 388, 410, 426, 428, 473, 502, 531, 568,
+                613, 614, 615, 632, 633, 641, 644, 645, 646, 647, 651, 658, 663, 664, 669, 670, 673, 684, 692, 697, 713, 729,
+                757, 758, 759, 760, 761, 762, 766, 767, 769, 772, 789, 790, 791 };
+            NpcDefs npcs;
+
+            using (StreamReader reader = File.OpenText(npcDefsFilePath))
+            {
+                string json = reader.ReadToEnd();
+                npcs = JsonConvert.DeserializeObject<NpcDefs>(json);
+            }
+
+            return npcs.npcs.Where(x => (excludeNonAttackables && x.attackable == false) || 
+                (excludeAttackableQuestNpcs && attackableQuestNpcs.Contains(x.id)))
+                .Select(x => x)
+                .ToList();
+        }
+
+        public NpcLocs GetNpcLocations()
+        {
+            NpcLocs npcs;
+
+            using (StreamReader reader = File.OpenText(NPC_LOCS_FILE_PATH))
+            {
+                string json = reader.ReadToEnd();
+                npcs = JsonConvert.DeserializeObject<NpcLocs>(json);
+            }
+
+            return npcs;
+        }
+
+        private List<NpcLoc> GetExcludedNpcLocs(IList<NpcLoc> originalNpcs, IList<int> excludedNpcInts)
+        {
+            List<NpcLoc> excludedNpcLocs = new List<NpcLoc>();
+
+            foreach (var excludedId in excludedNpcInts)
+            {
+                var matchingNpcLocs = originalNpcs.Where(x => x.id.Equals(excludedId)).Select(x => x).ToList();
+
+                excludedNpcLocs.AddRange(matchingNpcLocs);
+            }
+
+            return excludedNpcLocs;
+        }
+
+        private NpcLocs GetSingularlyRandomizedNpcs(NpcLocs npcs, IList<int> randomized, IList<int> exclusions)
+        {
+            NpcLocs newNpcs = npcs;
+
+            for (int i = 0; i < newNpcs.npclocs.Count(); i++)
+            {
+                // Do not randomize any NPCs in the exclusions list.
+                if (!exclusions.Contains(newNpcs.npclocs[i].id) && !exclusions.Contains(randomized[i]))
+                {
+                    newNpcs.npclocs[i].id = randomized[i];
+                }
+            }
+
+            return newNpcs;
+        }
+
+        private static NpcLocs GetGrouplyRandomizedNpcs(NpcLocs npcs, IList<int> randomized, IList<int> exclusionIds,
+            IList<NpcLoc> exclusionLocs)
+        {
             IList<int> groupedAttackableRandoms = randomized.Where(x => !exclusionIds.Contains(x)).Distinct().ToList();
             List<NpcLoc> newList = new List<NpcLoc>();
 
@@ -100,68 +181,9 @@ namespace OpenRscRandomizer.Library
                 }
             }
 
-            newList.AddRange(exclusionLocs);
-            npcs.npclocs = newList;
-
-            return npcs;
-        }
-
-        public NpcLocs GetNpcLocations()
-        {
-            NpcLocs npcs;
-
-            using (StreamReader reader = File.OpenText(NPC_LOCS_FILE_PATH))
-            {
-                string json = reader.ReadToEnd();
-                npcs = JsonConvert.DeserializeObject<NpcLocs>(json);
-            }
-
-            return npcs;
-        }
-
-        private IList<Npc> GetExcludedNpcs(string npcDefsFilePath)
-        {
-            IList<int> attackableQuestNpcs = new List<int>() { 35, 50, 29, 109, 177, 178, 179, 180, 181, 182, 192, 196, 216,
-                244, 245, 246, 247, 252, 254, 259, 276, 315, 361, 364, 383, 384, 386, 388, 410, 426, 428, 473, 502, 531, 568,
-                613, 614, 615, 632, 633, 641, 644, 645, 646, 647, 651, 658, 663, 664, 669, 670, 673, 684, 692, 697, 713, 729,
-                757, 758, 759, 760, 761, 762, 766, 767, 769, 772, 789, 790, 791 };
-            NpcDefs npcs;
-
-            using (StreamReader reader = File.OpenText(npcDefsFilePath))
-            {
-                string json = reader.ReadToEnd();
-                npcs = JsonConvert.DeserializeObject<NpcDefs>(json);
-            }
-
-            return npcs.npcs.Where(x => x.attackable == false || attackableQuestNpcs.Contains(x.id)).Select(x => x).ToList();
-        }
-
-        private List<NpcLoc> GetExcludedNpcLocs(IList<NpcLoc> originalNpcs, IList<int> excludedNpcInts)
-        {
-            List<NpcLoc> excludedNpcLocs = new List<NpcLoc>();
-
-            foreach (var excludedId in excludedNpcInts)
-            {
-                var matchingNpcLocs = originalNpcs.Where(x => x.id.Equals(excludedId)).Select(x => x).ToList();
-
-                excludedNpcLocs.AddRange(matchingNpcLocs);
-            }
-
-            return excludedNpcLocs;
-        }
-
-        private NpcLocs GetSingularlyRandomizedNpcs(NpcLocs npcs, IList<int> randomized, IList<int> exclusions)
-        {
             NpcLocs newNpcs = npcs;
-
-            for (int i = 0; i < newNpcs.npclocs.Count(); i++)
-            {
-                // Do not randomize any NPCs in the exclusions list.
-                if (!exclusions.Contains(newNpcs.npclocs[i].id) && !exclusions.Contains(randomized[i]))
-                {
-                    newNpcs.npclocs[i].id = randomized[i];
-                }
-            }
+            newList.AddRange(exclusionLocs);
+            newNpcs.npclocs = newList;
 
             return newNpcs;
         }
