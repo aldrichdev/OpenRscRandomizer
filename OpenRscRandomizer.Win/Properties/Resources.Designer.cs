@@ -83,9 +83,79 @@ namespace OpenRscRandomizer.Win.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Grouply_Exclude_Attackable_Quest_Npcs {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Grouply_Exclude_Attackable_Quest_Npcs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Grouply_Exclude_Non_Attackables {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Grouply_Exclude_Non_Attackables", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Npcs_No {
             get {
                 object obj = ResourceManager.GetObject("Npcs-No", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Dont_Exclude_Non_Attackables_1 {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Dont_Exclude_Non_Attackables_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Dont_Exclude_Non_Attackables_2 {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Dont_Exclude_Non_Attackables_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Exclude_Non_Attackables {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Exclude_Non_Attackables", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Singularly_Exclude_Non_Attackables_Dont_Exclude_Attackable_Quest_Npcs {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Singularly_Exclude_Non_Attackables_Dont_Exclude_Attackable_Quest_Npcs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Npcs_Singularly_Exclude_Non_Attackables_Only {
+            get {
+                object obj = ResourceManager.GetObject("Npcs_Singularly_Exclude_Non_Attackables_Only", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

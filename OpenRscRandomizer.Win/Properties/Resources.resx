@@ -127,6 +127,27 @@
   <data name="Npcs_Grouply_By_Location" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\assets\images\npcs-grouply-by-location.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Npcs_Grouply_Exclude_Attackable_Quest_Npcs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-grouply-exclude-attackable-quest-npcs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npcs_Grouply_Exclude_Non_Attackables" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-grouply-exclude-non-attackables.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Dont_Exclude_Non_Attackables_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-singularly-exclude-attackable-quest-npcs-dont-exclude-non-attackables-1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Dont_Exclude_Non_Attackables_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-singularly-exclude-attackable-quest-npcs-dont-exclude-non-attackables-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npcs_Singularly_Exclude_Attackable_Quest_Npcs_Exclude_Non_Attackables" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-singularly-exclude-attackable-quest-npcs-exclude-non-attackables.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npcs_Singularly_Exclude_Non_Attackables_Dont_Exclude_Attackable_Quest_Npcs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-singularly-exclude-non-attackables-dont-exclude-attackable-quest-npcs.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Npcs_Singularly_Exclude_Non_Attackables_Only" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\assets\images\npcs-singularly-exclude-non-attackables-only.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Npcs_Yes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Images\Npcs-Yes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

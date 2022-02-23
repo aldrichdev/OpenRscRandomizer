@@ -55,9 +55,9 @@ namespace OpenRscRandomizer.Win
             this.lblRandomizeNpcs.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lblRandomizeNpcs.Location = new System.Drawing.Point(21, 163);
             this.lblRandomizeNpcs.Name = "lblRandomizeNpcs";
-            this.lblRandomizeNpcs.Size = new System.Drawing.Size(144, 18);
+            this.lblRandomizeNpcs.Size = new System.Drawing.Size(218, 18);
             this.lblRandomizeNpcs.TabIndex = 3;
-            this.lblRandomizeNpcs.Text = "Randomize NPCs";
+            this.lblRandomizeNpcs.Text = "Randomize NPC Locations";
             // 
             // pbLogo
             // 
@@ -123,6 +123,7 @@ namespace OpenRscRandomizer.Win
             this.cbxExcludeAttackableQuestNpcs.TabIndex = 8;
             this.cbxExcludeAttackableQuestNpcs.Text = "Exclude Attackable Quest NPCs";
             this.cbxExcludeAttackableQuestNpcs.UseVisualStyleBackColor = true;
+            this.cbxExcludeAttackableQuestNpcs.CheckedChanged += new System.EventHandler(this.cbxExcludeAttackableQuestNpcs_CheckedChanged);
             // 
             // groupBox2
             // 
