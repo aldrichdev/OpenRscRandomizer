@@ -29,7 +29,7 @@ namespace OpenRscRandomizer.Tests
             var randomizer = new RscRandomizer(source);
             var seed = randomizer.GetNewSeed();
 
-            var defaultNpcLocations = await randomizer.GetNpcLocations();
+            var defaultNpcLocations = await randomizer.GetNpcLocsAsync();
             var randomizedNpcLocations = await randomizer.GetRandomizedNpcLocations(seed, mode, 
                 excludeNonAttackables, excludeAttackableQuestNpcs);
 
