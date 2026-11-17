@@ -2,6 +2,7 @@ using NUnit.Framework;
 using OpenRscRandomizer.Library;
 using OpenRscRandomizer.Library.Enums;
 using OpenRscRandomizer.Library.Models;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OpenRscRandomizer.Tests
@@ -37,6 +38,23 @@ namespace OpenRscRandomizer.Tests
             var npcOutputCount = randomizedNpcLocations.npclocs.Count;
 
             Assert.AreEqual(npcInputCount, npcOutputCount);
+        }
+
+        [Test]
+        public async Task Npc_Locations_Randomized_With_Same_Seed_Provides_Same_Results()
+        {
+            var source = new FileDefSource("Fixtures");
+            var randomizer = new RscRandomizer(source);
+            var seed = 1234;
+            
+            var runOne = await randomizer.GetRandomizedNpcLocations(seed, 
+                NpcRandomizationMode.Individually, false, false);
+            var runTwo = await randomizer.GetRandomizedNpcLocations(seed,
+                NpcRandomizationMode.Individually, false, false);
+
+            // Two runs with the same seed number should always return the same result.
+            Assert.AreEqual(JsonSerializer.Serialize(runOne.npclocs),
+                JsonSerializer.Serialize(runTwo.npclocs));
         }
     }
 }
