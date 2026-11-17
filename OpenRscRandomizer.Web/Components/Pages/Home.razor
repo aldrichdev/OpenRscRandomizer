@@ -42,7 +42,9 @@
     to be randomized. Then click <strong>Submit</strong>. This will prompt you to download a seed ZIP file.
     Download it, extract the ZIP archive locally, then copy the files in the extracted folder to the
     <code>server\conf\server\defs\locs</code> folder of your Core Framework folder. 
-    Finally, re-compile and run your server, and the game should be randomized!
+    Finally, re-compile and run your server, and the game should be randomized! If you generate a seed that you
+    really like, you can re-generate it by entering the seed number into the optional Seed field below; this
+    should generate the exact same files every time for that seed number as long as you choose the same options.
 </p>
 <EditForm Model="@seed" class="flex gap-4 flex-wrap flex-col border-1 bg-neutral-300 border-neutral-600 p-4 items-start" 
     OnValidSubmit="HandleFormSubmission">
@@ -99,6 +101,15 @@
             </InputRadioGroup>
         </div>
     </div>
+    <div class="flex gap-2">
+        <label for="seedNumber" class="font-bold cursor-help" title="Leave this blank unless you want to re-generate a specific seed">
+            Seed <span class="text-neutral-600 text-sm">(optional)</span>: 
+        </label>
+        <div class="flex gap-2">
+            <InputNumber id="seedNumber" @bind-Value="seed.SeedNumber" min="1" step="1" class="bg-white"></InputNumber>
+            <ValidationMessage For="() => seed.SeedNumber"></ValidationMessage>
+        </div>
+    </div>
     <Button Type="submit" Disabled="@((seed.NpcRandomizationMode == NpcRandomizationMode.None && !seed.RandomizeGroundItems)|| FormSubmitting)">Submit</Button>
     @if (ErrorMessage != null)
     {
@@ -131,8 +142,10 @@
 
             var source = new GitLabDefSource(client);
             var randomizer = new RscRandomizer(source);
+            var seed = convertedModel.SeedNumber != null && convertedModel.SeedNumber > 0 
+                ? (int)convertedModel.SeedNumber
+                : randomizer.GetNewSeed();
 
-            var seed = randomizer.GetNewSeed();
             string? npcLocsJson = null;
             string? groundItemsJson = null;
 

@@ -1,4 +1,5 @@
 ﻿using OpenRscRandomizer.Library.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace OpenRscRandomizer.Library.Models
 {
@@ -8,5 +9,9 @@ namespace OpenRscRandomizer.Library.Models
         public bool ExcludeNonAttackables { get; set; }
         public bool ExcludeAttackableQuestNpcs { get; set; }
         public bool RandomizeGroundItems { get; set; }
+        /// <summary>
+        /// User-defined seed number to control randomization.
+        /// </summary>
+        public int? SeedNumber { get; set; }
     }
 }
