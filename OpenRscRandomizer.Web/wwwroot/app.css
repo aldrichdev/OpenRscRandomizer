@@ -2,7 +2,7 @@
 @source "../**/*.razor";
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Inter', 'Comic Sans MS', Helvetica, Arial, sans-serif;
 }
 
 p {
@@ -11,6 +11,22 @@ p {
 
 a, .btn-link {
     color: #006bb7;
+}
+
+ul {
+    display: block;
+    list-style-type: disc;
+    list-style-position: outside;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 40px;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
 }
 
 .btn-primary {

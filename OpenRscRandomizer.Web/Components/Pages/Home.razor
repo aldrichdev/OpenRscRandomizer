@@ -104,12 +104,20 @@
     {
         <div class="text-red-500" role="alert">@ErrorMessage</div>
     }
-    </EditForm>
+    @if (LastGeneratedSeed != null)
+    {
+        <div role="alert">
+            ✅ Generated seed: <code class="text-green-700">@LastGeneratedSeed</code>
+        </div>
+    }
+</EditForm>
 
-@code{
+    @code{
     Seed seed = new Seed();
+
     private bool FormSubmitting { get; set; }
     private string? ErrorMessage { get; set; } = null;
+    private int? LastGeneratedSeed { get; set; } = null;
 
     public async Task HandleFormSubmission(EditContext context)
     {
@@ -142,6 +150,7 @@
             }
 
             await DownloadJsonZip(npcLocsJson, groundItemsJson, $"Seed {seed}.zip");
+            LastGeneratedSeed = seed;
         }
 
         FormSubmitting = false;

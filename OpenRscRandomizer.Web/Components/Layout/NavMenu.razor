@@ -9,17 +9,21 @@
 
     <div class="nav-scrollable">
         <nav class="nav flex-column">
-            <div class="bg-white/40 px-3 pt-4 pb-2 hover:bg-white/70 hover:cursor-pointer">
-                <NavLink class="flex gap-2 text-white! [&.active]:text-blue-400!" href="" Match="NavLinkMatch.All">
-                    <span aria-hidden="true" class="block w-4">🏠</span> Home
+            <div class="p-3 hover:cursor-pointer">
+                <NavLink href="" Match="NavLinkMatch.All" class="flex gap-2 items-center text-white! hover:text-blue-400! [&.active]:text-blue-400! [&.active]:[&_svg]:text-blue-400">
+                    <span aria-hidden="true"><Blazicon Svg="Lucide.House" class="w-4 text-white" /></span> Home
                 </NavLink>
             </div>
-            <div class="bg-white/40 px-3 pt-4 pb-2 hover:bg-white/70 hover:cursor-pointer">
-                <NavLink class="flex gap-2 text-white! [&.active]:text-blue-400!" href="about">
-                    <span aria-hidden="true" class="block w-4">❓</span> About
+            <div class="p-3 hover:cursor-pointer">
+                <NavLink href="about" class="flex gap-2 items-center text-white! hover:text-blue-400! [&.active]:text-blue-400! [&.active]:[&_svg]:text-blue-400">
+                    <span aria-hidden="true"><Blazicon Svg="Lucide.BadgeInfo" class="w-4 text-white" /></span> About
+                </NavLink>
+            </div>
+            <div class="p-3 hover:cursor-pointer">
+                <NavLink href="changelog" class="flex gap-2 items-center text-white! hover:text-blue-400! [&.active]:text-blue-400! [&.active]:[&_svg]:text-blue-400">
+                    <span aria-hidden="true"><Blazicon Svg="Lucide.Logs" class="w-4 text-white" /></span> Changelog
                 </NavLink>
             </div>
         </nav>
     </div>
 </nav-menu>
-

@@ -8,35 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\img\Npcs-Grouply-By-Location.png" />
-    <Content Remove="wwwroot\img\Npcs-Grouply-Exclude-Attackable-Quest-Npcs.png" />
-    <Content Remove="wwwroot\img\Npcs-Grouply-Exclude-Non-Attackables.png" />
-    <Content Remove="wwwroot\img\Npcs-Grouply-V2.png" />
-    <Content Remove="wwwroot\img\Npcs-Grouply.png" />
-    <Content Remove="wwwroot\img\Npcs-No.png" />
-    <Content Remove="wwwroot\img\Npcs-Singularly-Exclude-Attackable-Quest-Npcs-Dont-Exclude-Non-Attackables-1.png" />
-    <Content Remove="wwwroot\img\Npcs-Singularly-Exclude-Attackable-Quest-Npcs-Dont-Exclude-Non-Attackables-2.png" />
-    <Content Remove="wwwroot\img\Npcs-Singularly-Exclude-Attackable-Quest-Npcs-Exclude-Non-Attackables.png" />
-    <Content Remove="wwwroot\img\Npcs-Singularly-Exclude-Non-Attackables-Dont-Exclude-Attackable-Quest-Npcs.png" />
-    <Content Remove="wwwroot\img\Npcs-Singularly-Exclude-Non-Attackables-Only.png" />
-    <Content Remove="wwwroot\img\Npcs-Yes.png" />
     <Content Remove="wwwroot\img\RSC Randomizer Logo.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\img\Npcs-Grouply-By-Location.png" />
-    <None Include="wwwroot\img\Npcs-Grouply-Exclude-Attackable-Quest-Npcs.png" />
-    <None Include="wwwroot\img\Npcs-Grouply-Exclude-Non-Attackables.png" />
-    <None Include="wwwroot\img\Npcs-Grouply-V2.png" />
-    <None Include="wwwroot\img\Npcs-Grouply.png" />
-    <None Include="wwwroot\img\Npcs-No.png" />
-    <None Include="wwwroot\img\Npcs-Singularly-Exclude-Attackable-Quest-Npcs-Dont-Exclude-Non-Attackables-1.png" />
-    <None Include="wwwroot\img\Npcs-Singularly-Exclude-Attackable-Quest-Npcs-Dont-Exclude-Non-Attackables-2.png" />
-    <None Include="wwwroot\img\Npcs-Singularly-Exclude-Attackable-Quest-Npcs-Exclude-Non-Attackables.png" />
-    <None Include="wwwroot\img\Npcs-Singularly-Exclude-Non-Attackables-Dont-Exclude-Attackable-Quest-Npcs.png" />
-    <None Include="wwwroot\img\Npcs-Singularly-Exclude-Non-Attackables-Only.png" />
-    <None Include="wwwroot\img\Npcs-Yes.png" />
     <None Include="wwwroot\img\RSC Randomizer Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazicons.Lucide" Version="3.2.13" />
   </ItemGroup>
 
   <ItemGroup>
