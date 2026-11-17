@@ -1,0 +1,14 @@
+NOTE: Log in as MakeMeAdmin to teleport around. ("core" repo)
+
+To Do List.
+1. Add Items and Scenery sections
+   Items will have yes/no and also a checkbox to exclude quest items.
+   Scenery will have yes/no and 3 rando options:
+    1) Singularly,
+    2) Grouply (by id), and
+    3) Smart Grouply
+        (only place fishing spots where old fishing spots were, only place mining rocks where old ones were, etc)
+
+Later on in development, we may want to enrich this site to provide the entire Core
+Framework project as a ZIP with the randomization applied, which the user can then
+download and extract to get up and running faster.

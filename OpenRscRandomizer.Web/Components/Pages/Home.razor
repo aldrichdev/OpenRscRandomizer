@@ -1,0 +1,198 @@
+﻿@page "/"
+@using Newtonsoft.Json
+@using OpenRscRandomizer.Library
+@using OpenRscRandomizer.Library.Enums
+@using OpenRscRandomizer.Library.Models
+@using System.IO.Compression
+@using System.Text
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>RSC Randomizer</PageTitle>
+
+<img src="/img/RSC Randomizer Logo.png" alt="" />
+<div class="mt-2">
+    <strong>Overview</strong>
+    <hr class="mt-1" />
+</div>
+<p>
+    Welcome to the RSC Randomizer! This is an online form that you can use to generate new seed files
+    which you can plug into the Core Framework project directly in order to randomize RuneScape Classic.
+    You can randomize NPC locations in different ways and also randomize item spawns. Doing this gives you
+    a whole new RuneScape Classic experience! More customization options may be coming in the future.
+</p>
+<div class="mt-2">
+    <strong>Before you begin</strong>
+    <hr class="mt-1" />
+</div>
+<p>
+    You will need a copy of the Core Framework repository before you can randomize anything. You can download that
+    <a href="https://gitlab.com/openrsc/openrsc" target="_blank">from GitLab</a>. You'll also need to know
+    how to set up a local RSC server using the Core Framework.
+    <a href="https://rscreflections.wordpress.com/2021/01/17/how-to-set-up-a-runescape-classic-server-using-open-rsc/"
+       target="_blank">Here is a guide</a>
+    that teaches you how to do this.
+</p>
+<div class="mt-2">
+    <strong>How to use this site</strong>
+    <hr class="mt-1" />
+</div>
+<p>
+    Fill out the below form with your preferences for how you want RuneScape Classic
+    to be randomized. Then click <strong>Submit</strong>. This will prompt you to download a seed ZIP file.
+    Download it, extract the ZIP archive locally, then copy the files in the extracted folder to the
+    <code>server\conf\server\defs\locs</code> folder of your Core Framework folder. 
+    Finally, re-compile and run your server, and the game should be randomized!
+</p>
+<EditForm Model="@seed" class="flex gap-4 flex-wrap flex-col border-1 bg-neutral-300 border-neutral-600 p-4 items-start" 
+    OnValidSubmit="HandleFormSubmission">
+    <div class="flex gap-2">
+        <label title="Randomize NPC locations in the game" class="font-bold cursor-help">
+            Randomize NPC locations:
+        </label>
+        <div class="flex gap-2 flex-wrap flex-col">
+            <InputRadioGroup @bind-Value="seed.NpcRandomizationMode">
+                <label><InputRadio Value="@NpcRandomizationMode.None" /> No</label>
+                <label title="e.g. Each cow in the Lumbridge cow pen changes to a random NPC" class="cursor-help">
+                    <InputRadio Value="@NpcRandomizationMode.Individually" /> Individually
+                    @if (seed.NpcRandomizationMode == NpcRandomizationMode.Individually)
+                    {
+                        <span class="text-neutral-600 text-sm">(Randomize each individual NPC spawn)</span>
+                    }
+                </label>
+                <label title="e.g. All level 9 men change to a random NPC" class="cursor-help">
+                    <InputRadio Value="@NpcRandomizationMode.ByType" /> By Type
+                    @if (seed.NpcRandomizationMode == NpcRandomizationMode.ByType)
+                    {
+                        <span class="text-neutral-600 text-sm">(Each type of NPC turns into something else)</span>
+                    }
+                </label>
+                <label title="Randomize NPC by nest, e.g. Falador chicken pen now has unicorns" hidden>
+                    <InputRadio Value="@NpcRandomizationMode.ByNest" disabled /> By Nest <span class="text-neutral-500 text-sm">(coming soon)</span>
+                </label>
+            </InputRadioGroup>
+        </div>
+    </div>
+    @if (seed.NpcRandomizationMode != NpcRandomizationMode.None)
+    {
+        <div class="flex gap-2">
+            <label for="excludeNonAttackables" title="Exclude non-attackable NPCs (e.g. bankers)" class="font-bold cursor-help">
+                Exclude non-attackable NPCs:
+                <InputCheckbox id="excludeNonAttackables" @bind-Value="seed.ExcludeNonAttackables" />
+            </label>
+        </div>
+        <div class="flex gap-2">
+            <label for="excludeAttackableQuestNpcs" title="Exclude attackable quest NPCs (e.g. Delrith)" class="font-bold cursor-help">
+                Exclude attackable quest NPCs:
+                <InputCheckbox id="excludeAttackableQuestNpcs" @bind-Value="seed.ExcludeAttackableQuestNpcs" />
+            </label>
+        </div>
+    }
+    <div class="flex gap-2">
+        <label title="Randomize locations of items that spawn on the ground" class="font-bold cursor-help">
+            Randomize item spawns:
+        </label>
+        <div class="flex gap-2">
+            <InputRadioGroup @bind-Value="seed.RandomizeGroundItems">
+                <label><InputRadio Value="@false" /> No</label>
+                <label><InputRadio Value="@true" /> Yes</label>
+            </InputRadioGroup>
+        </div>
+    </div>
+    <Button Type="submit" Disabled="@((seed.NpcRandomizationMode == NpcRandomizationMode.None && !seed.RandomizeGroundItems)|| FormSubmitting)">Submit</Button>
+    @if (ErrorMessage != null)
+    {
+        <div class="text-red-500" role="alert">@ErrorMessage</div>
+    }
+    </EditForm>
+
+@code{
+    Seed seed = new Seed();
+    private bool FormSubmitting { get; set; }
+    private string? ErrorMessage { get; set; } = null;
+
+    public async Task HandleFormSubmission(EditContext context)
+    {
+        FormSubmitting = true;
+
+        Seed convertedModel = (Seed)context.Model;
+
+        using (var client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("RscRandomizer-DataFetcher/1.0");
+
+            var source = new GitLabDefSource(client);
+            var randomizer = new RscRandomizer(source);
+
+            var seed = randomizer.GetNewSeed();
+            string? npcLocsJson = null;
+            string? groundItemsJson = null;
+
+            if (convertedModel.NpcRandomizationMode != NpcRandomizationMode.None)
+            {
+                var npcs = await randomizer.GetRandomizedNpcLocations(seed, convertedModel.NpcRandomizationMode,
+                    convertedModel.ExcludeNonAttackables, convertedModel.ExcludeAttackableQuestNpcs);
+                npcLocsJson = JsonConvert.SerializeObject(npcs, Formatting.Indented);
+            }
+
+            if (convertedModel.RandomizeGroundItems)
+            {
+                var groundItems = await randomizer.GetRandomizedGroundItems(seed);
+                groundItemsJson = JsonConvert.SerializeObject(groundItems, Formatting.Indented);
+            }
+
+            await DownloadJsonZip(npcLocsJson, groundItemsJson, $"Seed {seed}.zip");
+        }
+
+        FormSubmitting = false;
+    }
+
+    private async Task DownloadJsonZip(string? npcLocsJson, string? groundItemsJson, string outputZipFileName)
+    {
+        using var zipStream = new MemoryStream();
+
+        // `leaveOpen: true` so the MemoryStream survives disposal of the archive
+        using (var archive = new ZipArchive(zipStream, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            if (npcLocsJson != null)
+            {
+                // Add the NpcLocs.json file to the zip if the user chose to randomize NPCs
+                await WriteJsonFile(archive, "NpcLocs.json", npcLocsJson);
+            }
+
+
+            if (groundItemsJson != null)
+            {
+                // Adds the GroundItems.json file to the zip if the user chose to randomize items
+                await WriteJsonFile(archive, "GroundItems.json", groundItemsJson);
+            }
+        }
+
+        // The archive must be disposed before reading, so the central directory is written
+        zipStream.Position = 0;
+
+        using var streamRef = new DotNetStreamReference(zipStream);
+
+        try
+        {
+            await JS.InvokeVoidAsync("downloadFileFromStream", outputZipFileName, streamRef);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "The download failed. Please try again later.";
+            throw ex;
+        }
+
+    }
+
+    /// <summary>
+    /// Adds a single JSON file to the ZIP archive.
+    /// </summary>
+    private async Task WriteJsonFile(ZipArchive archive, string jsonFileName, string jsonString)
+    {
+        var entry = archive.CreateEntry(jsonFileName, CompressionLevel.Optimal);
+        await using var entryStream = entry.Open();
+        await using var writer = new StreamWriter(entryStream, new UTF8Encoding(false));
+        await writer.WriteAsync(jsonString);
+    }
+}

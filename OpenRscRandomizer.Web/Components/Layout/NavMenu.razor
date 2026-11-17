@@ -1,0 +1,25 @@
+﻿<script type="module" src="@Assets["Components/Layout/NavMenu.razor.js"]"></script>
+
+<div class="bg-black/40">
+    <a class="p-3 text-white! font-bold block" href="">✨ RSC Randomizer</a>
+</div>
+
+<nav-menu>
+    <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+    <div class="nav-scrollable">
+        <nav class="nav flex-column">
+            <div class="bg-white/40 px-3 pt-4 pb-2 hover:bg-white/70 hover:cursor-pointer">
+                <NavLink class="flex gap-2 text-white! [&.active]:text-blue-400!" href="" Match="NavLinkMatch.All">
+                    <span aria-hidden="true" class="block w-4">🏠</span> Home
+                </NavLink>
+            </div>
+            <div class="bg-white/40 px-3 pt-4 pb-2 hover:bg-white/70 hover:cursor-pointer">
+                <NavLink class="flex gap-2 text-white! [&.active]:text-blue-400!" href="about">
+                    <span aria-hidden="true" class="block w-4">❓</span> About
+                </NavLink>
+            </div>
+        </nav>
+    </div>
+</nav-menu>
+

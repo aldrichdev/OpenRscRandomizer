@@ -1,7 +1,8 @@
 using NUnit.Framework;
 using OpenRscRandomizer.Library;
 using OpenRscRandomizer.Library.Enums;
-using System.IO;
+using OpenRscRandomizer.Library.Models;
+using System.Threading.Tasks;
 
 namespace OpenRscRandomizer.Tests
 {
@@ -13,35 +14,24 @@ namespace OpenRscRandomizer.Tests
         }
 
         [Test]
-        public void Seed_Folder_Creation_Succeeds()
-        {
-            var randomizer = new RscRandomizer();
-            var seedDir = randomizer.CreateSeed();
-            var folderExists = Directory.Exists(seedDir.FullName);
-            var folderPathIsCorrect = seedDir.FullName
-                .Contains($"{RscRandomizer.PROJECT_PATH}\\Output\\Seed");
-
-            Assert.NotNull(seedDir);
-            Assert.IsTrue(folderExists);
-            Assert.IsTrue(folderPathIsCorrect);
-        }
-
-        [Test]
-        [TestCase(NpcRandomizerMode.Singularly, false, false)]
-        [TestCase(NpcRandomizerMode.Singularly, false, true)]
-        [TestCase(NpcRandomizerMode.Singularly, true, false)]
-        [TestCase(NpcRandomizerMode.Singularly, true, true)]
-        [TestCase(NpcRandomizerMode.Grouply, false, false)]
-        [TestCase(NpcRandomizerMode.Grouply, false, true)]
-        [TestCase(NpcRandomizerMode.Grouply, true, false)]
-        [TestCase(NpcRandomizerMode.Grouply, true, true)]
-        public void Npc_Input_Count_Matches_Output_Count(NpcRandomizerMode mode, bool excludeNonAttackables,
+        [TestCase(NpcRandomizationMode.Individually, false, false)]
+        [TestCase(NpcRandomizationMode.Individually, false, true)]
+        [TestCase(NpcRandomizationMode.Individually, true, false)]
+        [TestCase(NpcRandomizationMode.Individually, true, true)]
+        [TestCase(NpcRandomizationMode.ByType, false, false)]
+        [TestCase(NpcRandomizationMode.ByType, false, true)]
+        [TestCase(NpcRandomizationMode.ByType, true, false)]
+        [TestCase(NpcRandomizationMode.ByType, true, true)]
+        public async Task Npc_Input_Count_Matches_Output_Count(NpcRandomizationMode mode, bool excludeNonAttackables,
             bool excludeAttackableQuestNpcs)
         {
-            var randomizer = new RscRandomizer();
-            var defaultNpcLocations = randomizer.GetNpcLocations();
-            var randomizedNpcLocations = randomizer.GetRandomizedNpcLocations(mode, excludeNonAttackables,
-                excludeAttackableQuestNpcs);
+            var source = new FileDefSource("Fixtures");
+            var randomizer = new RscRandomizer(source);
+            var seed = randomizer.GetNewSeed();
+
+            var defaultNpcLocations = await randomizer.GetNpcLocations();
+            var randomizedNpcLocations = await randomizer.GetRandomizedNpcLocations(seed, mode, 
+                excludeNonAttackables, excludeAttackableQuestNpcs);
 
             var npcInputCount = defaultNpcLocations.npclocs.Count;
             var npcOutputCount = randomizedNpcLocations.npclocs.Count;
