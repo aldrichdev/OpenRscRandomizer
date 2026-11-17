@@ -1,0 +1,23 @@
+﻿<script type="module" src="@Assets["Components/Layout/NavMenu.razor.js"]"></script>
+
+<div class="bg-black/40">
+    <a class="p-3 text-white! font-bold block" href="">✨ RSC Randomizer</a>
+</div>
+
+<nav-menu>
+    <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+    <div class="nav-scrollable">
+        <nav class="nav flex-column">
+            <NavLink href="" Match="NavLinkMatch.All" class="flex gap-2 items-center p-3 text-white! hover:text-blue-400! [&.active]:text-blue-400! [&.active]:[&_svg]:text-blue-400">
+                <span aria-hidden="true"><Blazicon Svg="Lucide.House" class="w-4 text-white" /></span> Home
+            </NavLink>
+            <NavLink href="about" class="flex gap-2 items-center p-3 text-white! hover:text-blue-400! [&.active]:text-blue-400! [&.active]:[&_svg]:text-blue-400">
+                <span aria-hidden="true"><Blazicon Svg="Lucide.BadgeInfo" class="w-4 text-white" /></span> About
+            </NavLink>
+            <NavLink href="changelog" class="flex gap-2 items-center p-3 text-white! hover:text-blue-400! [&.active]:text-blue-400! [&.active]:[&_svg]:text-blue-400">
+                <span aria-hidden="true"><Blazicon Svg="Lucide.Logs" class="w-4 text-white" /></span> Changelog
+            </NavLink>
+        </nav>
+    </div>
+</nav-menu>

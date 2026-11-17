@@ -1,0 +1,10 @@
+﻿namespace OpenRscRandomizer.Library.Models
+{
+    public class NpcLoc
+    {
+        public int id { get; set; }
+        public Coordinate start { get; set; }
+        public Coordinate min { get; set; }
+        public Coordinate max { get; set; }
+    }
+}
