@@ -229,12 +229,6 @@
   .table {
     display: table;
   }
-  .h-full {
-    height: 100%;
-  }
-  .w-2 {
-    width: calc(var(--spacing) * 2);
-  }
   .w-4 {
     width: calc(var(--spacing) * 4);
   }
@@ -319,9 +313,6 @@
   .bg-neutral-300 {
     background-color: var(--color-neutral-300);
   }
-  .bg-neutral-500 {
-    background-color: var(--color-neutral-500);
-  }
   .bg-white {
     background-color: var(--color-white);
   }
@@ -330,9 +321,6 @@
     @supports (color: color-mix(in lab, red, red)) {
       background-color: color-mix(in oklab, var(--color-white) 40%, transparent);
     }
-  }
-  .p-2 {
-    padding: calc(var(--spacing) * 2);
   }
   .p-3 {
     padding: calc(var(--spacing) * 3);
@@ -355,17 +343,11 @@
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
-  .ps-3 {
-    padding-inline-start: calc(var(--spacing) * 3);
-  }
   .pt-3 {
     padding-top: calc(var(--spacing) * 3);
   }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
-  }
-  .pt-10 {
-    padding-top: calc(var(--spacing) * 10);
   }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
@@ -388,12 +370,6 @@
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
-  }
-  .text-blue-600 {
-    color: var(--color-blue-600);
-  }
-  .text-blue-600\! {
-    color: var(--color-blue-600) !important;
   }
   .text-gray-400 {
     color: var(--color-gray-400);
@@ -451,9 +427,6 @@
     .hover\:text-gray-600:hover {
       color: var(--color-gray-600);
     }
-    .hover\:underline:hover {
-      text-decoration-line: underline;
-    }
   }
   .focus\:ring-2:focus {
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
@@ -473,71 +446,14 @@
   .active\:bg-blue-800:active {
     background-color: var(--color-blue-800);
   }
-  .active\:text-blue-500:active {
-    color: var(--color-blue-500);
-  }
-  .active\:text-blue-500\!:active {
-    color: var(--color-blue-500) !important;
-  }
-  .active\:text-blue-800:active {
-    color: var(--color-blue-800);
-  }
-  .active\:text-blue-800\!:active {
-    color: var(--color-blue-800) !important;
-  }
   .disabled\:cursor-not-allowed:disabled {
     cursor: not-allowed;
   }
   .disabled\:bg-blue-200:disabled {
     background-color: var(--color-blue-200);
   }
-  .\[\&\.active\]\:text-blue-300\!.active {
-    color: var(--color-blue-300) !important;
-  }
   .\[\&\.active\]\:text-blue-400\!.active {
     color: var(--color-blue-400) !important;
-  }
-  .\[\&\.active\]\:text-blue-500\!.active {
-    color: var(--color-blue-500) !important;
-  }
-  .\[\&\.active\]\:text-blue-600\!.active {
-    color: var(--color-blue-600) !important;
-  }
-  .\[\&\.active\]\:text-blue-700\!.active {
-    color: var(--color-blue-700) !important;
-  }
-  .\[\&\.active\]\:text-cyan-400\!.active {
-    color: var(--color-cyan-400) !important;
-  }
-  .\[\&\.active\]\:text-neutral-600\!.active {
-    color: var(--color-neutral-600) !important;
-  }
-  .\[\&\.active\]\:text-neutral-700\!.active {
-    color: var(--color-neutral-700) !important;
-  }
-  .\[\&\.active\]\:text-neutral-800\!.active {
-    color: var(--color-neutral-800) !important;
-  }
-  .\[\&\.active\]\:text-slate-200\!.active {
-    color: var(--color-slate-200) !important;
-  }
-  .\[\&\.active\]\:text-slate-300\!.active {
-    color: var(--color-slate-300) !important;
-  }
-  .\[\&\.active\]\:text-slate-400\!.active {
-    color: var(--color-slate-400) !important;
-  }
-  .\[\&\.active\]\:text-slate-500\!.active {
-    color: var(--color-slate-500) !important;
-  }
-  .\[\&\.active\]\:text-slate-700\!.active {
-    color: var(--color-slate-700) !important;
-  }
-  .\[\&\.active\]\:text-slate-800\!.active {
-    color: var(--color-slate-800) !important;
-  }
-  .\[\&\.active\]\:text-yellow-400\!.active {
-    color: var(--color-yellow-400) !important;
   }
 }
 html, body {

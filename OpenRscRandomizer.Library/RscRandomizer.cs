@@ -33,7 +33,7 @@ namespace OpenRscRandomizer.Library
             IList<Npc> exclusions = GetExcludedNpcs(defs, excludeNonAttackables, excludeAttackableQuestNpcs);
             IList<int> exclusionIds = exclusions.Select(x => x.id).ToList();
 
-            NpcLocs npcs = await GetNpcLocations();
+            NpcLocs npcs = await GetNpcLocsAsync();
 
             IList<NpcLoc> exclusionLocs = GetExcludedNpcLocs(npcs.npclocs, exclusionIds);
             IList<int> justTheIds = npcs.npclocs.Select(x => x.id).ToList();
@@ -53,7 +53,7 @@ namespace OpenRscRandomizer.Library
         }
 
         /// <summary>
-        /// Fetches the npcDefs.json file from the Core Framework GitLab repository.
+        /// Fetches the <c>NpcDefs.json</c> file.
         /// </summary>
         private async Task<NpcDefs> GetNpcDefsAsync()
         {
@@ -75,7 +75,10 @@ namespace OpenRscRandomizer.Library
                 .ToList();
         }
 
-        public async Task<NpcLocs> GetNpcLocations()
+        /// <summary>
+        /// Fetches the <c>NpcLocs.json</c> file.
+        /// </summary>
+        public async Task<NpcLocs> GetNpcLocsAsync()
         {
             NpcLocs npcs = await _defSource.LoadAsync<NpcLocs>("locs/NpcLocs.json");
 
@@ -171,7 +174,7 @@ namespace OpenRscRandomizer.Library
         }
 
         /// <summary>
-        /// Fetches the groundItems.json file from the Core Framework GitLab repository as an object.
+        /// Fetches the <c>GroundItems.json</c> file.
         /// </summary>
         private async Task<GroundItems> GetGroundItemsAsync()
         {

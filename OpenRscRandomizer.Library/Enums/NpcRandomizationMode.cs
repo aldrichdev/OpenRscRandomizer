@@ -13,6 +13,7 @@
         ByType,
         /// <summary>
         /// Randomizes by NPC nest. (Legacy: "Grouply By Location")
+        /// Not implemented yet, but planned.
         /// </summary>
         ByNest,
     }
