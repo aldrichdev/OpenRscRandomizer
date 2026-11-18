@@ -8,14 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\img\RSC Randomizer Logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\img\RSC Randomizer Logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazicons.Lucide" Version="3.2.13" />
   </ItemGroup>
 
